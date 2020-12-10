@@ -4,6 +4,7 @@ from torchio import DATA
 import numpy as np 
 import SimpleITK as sitk
 from pathlib import Path 
+from .visualization import show_subject 
 
 class CT_Dataset:
     def __init__(self, img_dir):
@@ -64,6 +65,11 @@ class CT_Dataset:
 
         print('Training set:', len(training_set), 'subjects')
         print('Validation set:', len(validation_set), 'subjects')
+
+        one_subject = dataset[0]
+        print(one_subject)
+        print(one_subject.ct)
+        show_subject(tio.ToCanonical()(one_subject), 'ct')
 
 
         return num_subjects

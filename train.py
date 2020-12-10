@@ -7,7 +7,7 @@ DIR_CHECKPOINT = 'checkpoints/'
 def train_net():
 
     dataset = CT_Dataset(DIR_IMG)
-    dataset = dataset.transform(1)
+    dataset = dataset.transform(0.5)
     print('Dataset size:', dataset, 'subjects')
 
 if __name__ == '__main__':
