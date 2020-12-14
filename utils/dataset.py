@@ -69,7 +69,7 @@ class CT_Dataset:
         one_subject = dataset[0]
         print(one_subject)
         print(one_subject.ct)
-        show_subject(tio.ToCanonical()(one_subject), 'ct', label_name='segm')
+        #show_subject(tio.ToCanonical()(one_subject), 'ct', label_name='segm')
 
 
         return training_set, validation_set

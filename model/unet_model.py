@@ -117,7 +117,7 @@ class UNet(nn.Module):
 
 if __name__ == "__main__":
     # A full forward pass
-    im = torch.randn(1, 1, 115, 111,119)
+    im = torch.randn(1, 1, 64, 64, 64)
     model = UNet(1, 1, bilinear=False)
     x = model(im)
     print(x.shape)
