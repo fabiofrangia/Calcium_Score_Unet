@@ -9,6 +9,7 @@ import tqdm
 import torch.nn as nn
 from torch import optim
 from model.loss import DiceLoss
+import torch
 
 DIR_IMG = 'data/'
 DIR_CHECKPOINT = 'checkpoints/'
@@ -43,25 +44,29 @@ def train_net(batch_size = 1, lr = 0.001, train_split = 0.5):
         img = i['ct']['data'][0]
         mask = i['segm']['data'][0]
         patch_img = generate_patch(img)
+        print(patch_img.shape)
         patch_mask = generate_patch(mask)
 
 
         for j in range(0,len(patch_img)-1):
-            #mask_pred = net(patch_img.unsqueeze(1)[j:j+1])  
+            mask_pred = net(patch_img.unsqueeze(1)[j:j+1])  
             print(patch_img[j].min(), patch_img[j].max())
             if (patch_img[j].min() == patch_img[j].max()):
                 print("All zeros")
             else:
-                plt.imshow(patch_img[j][:,:, 20],cmap='gray')
-                plt.show()
-                plt.imshow(patch_mask[0][:,:, 20],cmap='gray')
-                plt.show()
-            #loss = criterion(mask_pred, patch_mask[j:j+1].long())   
-            #print(loss.item())  
-            #optimizer.zero_grad()
-            #loss.backward()
+                if j%10==0:
+                    plt.imshow(patch_img[j][:,:, 20],cmap='gray')
+                    plt.title("img")
+                    plt.show()
+                    plt.imshow(mask_pred.detach().numpy()[0][0][:,:, 20],cmap='gray')
+                    plt.title("Output")
+                    plt.show()
+                loss = criterion(mask_pred, patch_mask[j:j+1].long())   
+                print(loss.item())  
+                optimizer.zero_grad()
+                loss.backward()
 
-            #optimizer.step()
+                optimizer.step()
 
 
 if __name__ == '__main__':
