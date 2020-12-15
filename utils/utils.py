@@ -1,14 +1,13 @@
 import numpy as np
 import torch 
 
-def generate_patch(img, size=64, stride=16):
+def generate_patch(img, size=64, stride=8):
     """ Method for the generation of patch
     Args:
         size: size of the pathc (cubic). Default is 64
         stride: (int). Default is 25
     """
 
-    img[0][img[0]<0]=0
     shape_x = img[0].shape[0]
     shape_y = img[0].shape[1]
     shape_z = img[0].shape[2]

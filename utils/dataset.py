@@ -45,7 +45,7 @@ class CT_Dataset:
 
         training_trainsform = tio.Compose([
             tio.ToCanonical(),
-            tio.ZNormalization(masking_method=tio.ZNormalization.mean),
+            tio.ZNormalization(),
             tio.RandomAffine()
         ])
 
