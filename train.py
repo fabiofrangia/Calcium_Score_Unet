@@ -13,10 +13,22 @@ from model.loss import DiceLoss
 DIR_IMG = 'data/'
 DIR_CHECKPOINT = 'checkpoints/'
 
-def train_net(batch_size = 1, lr = 0.001):
+
+def train_net(batch_size = 1, lr = 0.001, train_split = 0.5):
+
+    """ Train function for UNET
+    Args: 
+        batch_size
+        learning rate = lr
+    After loading ct and associated mask, train the network with the UNET models.
+    Train/Val split ratio is defined in the CT_Datased method
+
+    Using Tensorboard it's also possbile to see a bung of stuff (TBD)
+    $ tensorboard --logdir=runs
+    """
 
     dataset = CT_Dataset(DIR_IMG)
-    train, val = dataset.transform(0.5)
+    train, val = dataset.transform(train_split)
     train_loader = DataLoader(train, batch_size=batch_size, shuffle=True, num_workers=8, pin_memory=True)
     val_loader = DataLoader(val, batch_size=batch_size, shuffle=False, num_workers=8, pin_memory=True)
 
@@ -32,21 +44,18 @@ def train_net(batch_size = 1, lr = 0.001):
         mask = i['segm']['data'][0]
         patch_img = generate_patch(img)
         patch_mask = generate_patch(mask)
-        print(patch_img.shape)
-        print(patch_mask.shape)
-        plt.imshow(patch_img[5][:,:, 20],cmap='gray')
-        plt.show()
 
-
-
-        print(patch_img.unsqueeze(1).shape)
 
         for j in range(0,len(patch_img)-1):
             #mask_pred = net(patch_img.unsqueeze(1)[j:j+1])  
-            plt.imshow(patch_img[j][:,:, 20],cmap='gray')
-            plt.show()
-            plt.imshow(patch_mask[0][:,:, 20],cmap='gray')
-            plt.show()
+            print(patch_img[j].min(), patch_img[j].max())
+            if (patch_img[j].min() == patch_img[j].max()):
+                print("All zeros")
+            else:
+                plt.imshow(patch_img[j][:,:, 20],cmap='gray')
+                plt.show()
+                plt.imshow(patch_mask[0][:,:, 20],cmap='gray')
+                plt.show()
             #loss = criterion(mask_pred, patch_mask[j:j+1].long())   
             #print(loss.item())  
             #optimizer.zero_grad()

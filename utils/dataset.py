@@ -7,7 +7,7 @@ from pathlib import Path
 from .visualization import show_subject 
 
 class CT_Dataset:
-    def __init__(self, img_dir):
+    def __init__(self, img_dir, show_example=False):
 
         self.img_dir = Path(img_dir)
 
@@ -15,6 +15,7 @@ class CT_Dataset:
         mask_dir = self.img_dir / 'masks'
         self.image_paths = image_dir.glob('*.nii.gz')
         self.mask_paths = mask_dir.glob('*.nii.gz')
+        self.show_example = show_example
 
     def retrieve_data(self):
 
@@ -66,10 +67,9 @@ class CT_Dataset:
         print('Training set:', len(training_set), 'subjects')
         print('Validation set:', len(validation_set), 'subjects')
 
-        one_subject = dataset[0]
-        print(one_subject)
-        print(one_subject.ct)
-        #show_subject(tio.ToCanonical()(one_subject), 'ct', label_name='segm')
+        if self.show_example:
+            one_subject = dataset[0]
+            show_subject(tio.ToCanonical()(one_subject), 'ct', label_name='segm')
 
 
         return training_set, validation_set
