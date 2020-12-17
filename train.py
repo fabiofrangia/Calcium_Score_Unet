@@ -42,7 +42,7 @@ def train_net(batch_size = 1, lr = 0.001, train_split = 0.5, epochs=20):
     optimizer = optim.RMSprop(net.parameters(), lr=lr, weight_decay=1e-8, momentum=0.9)
 
     epoch_loss = 0
-    for ep in range(0, epochs):
+    '''for ep in range(0, epochs):
         for i in train_loader:
             img = i['ct']['data'][0]
             mask = i['segm']['data'][0]
@@ -67,7 +67,7 @@ def train_net(batch_size = 1, lr = 0.001, train_split = 0.5, epochs=20):
                     plt.show()
                     plt.imshow(mask_pred.cpu().detach().numpy()[0][0][:,:, 20],cmap='gray')
                     plt.title("Output")
-                    plt.show()
+                    plt.show()'''
 
 
 if __name__ == '__main__':

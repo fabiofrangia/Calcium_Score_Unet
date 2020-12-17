@@ -5,39 +5,43 @@ import numpy as np
 import SimpleITK as sitk
 from pathlib import Path 
 from .visualization import show_subject 
+import os 
 
 class CT_Dataset:
     def __init__(self, img_dir, show_example=False):
 
-        self.img_dir = Path(img_dir)
+        self.img_dir = img_dir
 
-        image_dir = self.img_dir / 'imgs'
-        mask_dir = self.img_dir / 'masks'
-        self.image_paths = image_dir.glob('*.nii.gz')
-        self.mask_paths = mask_dir.glob('*.nii.gz')
+        self.image_dir = self.img_dir + 'imgs'
+        self.mask_dir = self.img_dir + 'masks'
+        #self.image_paths = image_dir.glob('*.nii.gz')
+        #self.mask_paths = mask_dir.glob('*.nii.gz')
         self.show_example = show_example
 
     def retrieve_data(self):
 
-        mask_tot = []
+        
         subjects = []
 
-        for image in self.image_paths:
-            id = image.stem.split(' ')[0]
-            for mask in self.mask_paths:
-                if id in mask.stem:
-                    mask_tot.append(mask)
+        for image in os.listdir(self.image_dir):
+            mask_tot = []
+            if image.endswith('.nii.gz'):
+                id = image.split(' ')[0]
+                for mask in os.listdir(self.mask_dir):
+                    if mask.endswith('.nii.gz'):
+                        if id in mask:
+                            mask_tot.append(mask)
 
 
-            for i in range(0, len(mask_tot)):
+                for i in range(0, len(mask_tot)):
 
-                subject = tio.Subject(
-                    ct = tio.Image(image),
-                    segm = tio.Image(mask_tot[i])
-                )
+                    subject = tio.Subject(
+                        ct = tio.Image(self.image_dir + '/' + image),
+                        segm = tio.Image(self.mask_dir + '/' + mask_tot[i])
+                    )
 
-                subjects.append(subject)
-            dataset = tio.SubjectsDataset(subjects) 
+                    subjects.append(subject)
+        dataset = tio.SubjectsDataset(subjects) 
 
         return dataset, subjects
 
